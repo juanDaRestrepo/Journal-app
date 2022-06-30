@@ -1,6 +1,6 @@
-# Poject´s description:
+# Project´s description:
 
-This a Journal made in react it has an auth module and it allows users to write 
+This a Journal made in react, it allows users to write 
 all about their days and charge images to their daily stories.
 
 ## Tools used:
