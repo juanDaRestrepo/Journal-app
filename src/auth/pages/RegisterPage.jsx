@@ -1,9 +1,9 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Button, Grid, TextField, Typography, Link  } from "@mui/material";
-import { useDispatch } from 'react-redux';
+import { Button, Grid, TextField, Typography, Link, Alert  } from "@mui/material";
+import { useDispatch, useSelector } from 'react-redux';
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks/useForm';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { startCreatingUserWithEmailPassword } from '../../store/auth';
 
 
@@ -18,6 +18,8 @@ export const RegisterPage = () => {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const dispatch = useDispatch()
 
+  const {status, errorMessage} = useSelector( state => state.auth);
+  const isCheckingAuthentication = useMemo(() => status ==='checking', [status])
   const formData = {
     email: '',
     password: '',
@@ -30,10 +32,13 @@ export const RegisterPage = () => {
 
   const onSubmit = ( event ) => {
     event.preventDefault();
-    setFormSubmitted(true)
+    setFormSubmitted(true);
+    
     if( !isFormValid ) return;
     dispatch(startCreatingUserWithEmailPassword(formState))
+    console.log(errorMessage)
   }
+
 
  
   
@@ -90,8 +95,16 @@ export const RegisterPage = () => {
               sx={{ mb: 2, mt: 1 }} 
               alignItems="center"
               justifyContent="center">
+              <Grid
+                item
+                xs={ 12 }
+                display={ !!errorMessage ? '': 'none' }
+              >
+                <Alert severity='error'>{ errorMessage }</Alert>
+              </Grid>
               <Grid item xs={ 12 } sm={6}>
-                <Button 
+                <Button
+                  disabled={ isCheckingAuthentication }
                   variant='contained' 
                   fullWidth
                   type='submit'
