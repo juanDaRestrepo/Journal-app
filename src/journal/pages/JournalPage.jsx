@@ -1,10 +1,17 @@
 import { IconButton, Typography } from '@mui/material'
 import {AddOutlined } from '@mui/icons-material'
-import { ImageGallery } from '../components'
+import { useDispatch } from 'react-redux/es/exports'
 import { JournalLayout } from '../layout/JournalLayout'
-import { NoteView, NothingSelectedView } from '../views'
+import { NothingSelectedView } from '../views'
+import { startNewNote } from '../../store/journal/thunks'
 
 export const JournalPage = () => {
+  const dispatch = useDispatch();
+  
+  const onClickNewNote = () => {
+    dispatch(startNewNote())
+  }
+
   return (
     <JournalLayout className="animate__animated animate__fadeIn animate__faster">
      {/*  <Typography >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta, veritatis? Voluptates officia dignissimos nemo nihil provident? Reiciendis dicta officia, minus cumque non culpa. Nemo temporibus provident officiis voluptatibus ab odit!</Typography> */}
@@ -12,6 +19,7 @@ export const JournalPage = () => {
       {/* <NoteView /> */}
      {/* <ImageGallery /> */}
      <IconButton
+        onClick={onClickNewNote}
         size='large'
         sx={{
           color: 'white',
