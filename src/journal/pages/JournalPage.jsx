@@ -15,11 +15,10 @@ export const JournalPage = () => {
 
   return (
     <JournalLayout className="animate__animated animate__fadeIn animate__faster">
-     {/*  <Typography >Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta, veritatis? Voluptates officia dignissimos nemo nihil provident? Reiciendis dicta officia, minus cumque non culpa. Nemo temporibus provident officiis voluptatibus ab odit!</Typography> */}
+  
      {!active ? <NothingSelectedView /> : <NoteView/>}
      {active && <ImageGallery /> }
-      {/* <NoteView /> */}
-     {/* */}
+    
      <IconButton
         disabled={isSaving}
         onClick={onClickNewNote}

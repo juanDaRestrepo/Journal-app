@@ -1,8 +1,9 @@
 
+import { async } from "@firebase/util";
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
 import { loadNotes } from "../../helpers";
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes } from "./journalSlice";
+import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
 
 export const startNewNote = ( ) => {
     return async( dispatch, getState ) => {
@@ -35,5 +36,22 @@ export const startLoadingNotes = () => {
         if( !uid ) throw new Error('the uid of the user is not valid')
         const notes = await loadNotes(uid);
         dispatch(setNotes(notes))
+    }
+}
+
+export const saveNote = () => {
+    return async( dispatch, getState ) => {
+
+        dispatch(setSaving());
+        const { uid } = getState().auth;
+        const { active:note } = getState().journal;
+
+        const noteToFiresStore = { ...note };
+        delete noteToFiresStore.id
+
+        const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }` );
+        await setDoc( docRef, noteToFiresStore, { merge: true})
+        
+        dispatch(updateNote(note))
     }
 }
