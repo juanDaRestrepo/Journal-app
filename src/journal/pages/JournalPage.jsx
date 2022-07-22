@@ -17,7 +17,7 @@ export const JournalPage = () => {
     <JournalLayout className="animate__animated animate__fadeIn animate__faster">
   
      {!active ? <NothingSelectedView /> : <NoteView/>}
-     {active && <ImageGallery /> }
+   
     
      <IconButton
         disabled={isSaving}

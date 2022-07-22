@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux/es/exports";
 
-import { Button, Grid, TextField, Typography } from "@mui/material";
-import { SaveOutlined } from "@mui/icons-material";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
+import { SaveOutlined, UploadOutlined } from "@mui/icons-material";
 import { useForm } from "../../hooks/useForm";
-import { useEffect, useMemo } from "react";
-import { saveNote, setActiveNote } from "../../store/journal";
+import { useEffect, useMemo, useRef } from "react";
+import { saveNote, setActiveNote, startUploadingFiles } from "../../store/journal";
 import Swal from "sweetalert2";
 import 'sweetalert2/dist/sweetalert2.css'
+import { ImageGallery } from "../components";
 
 export const NoteView = () => {
 
@@ -19,6 +20,8 @@ export const NoteView = () => {
     const newDate = new Date(date);
     return newDate.toUTCString();
   }, [date]);
+
+  const fileInputRef = useRef();
 
   useEffect(() => {
     dispatch(setActiveNote(formState))
@@ -36,6 +39,11 @@ export const NoteView = () => {
     dispatch(saveNote())
   }
 
+  const onFileInputChange = ({ target }) => {
+    if( target.files === 0 ) return;
+    dispatch( startUploadingFiles( target.files ));
+  }
+
   return (
     <Grid
       container
@@ -50,6 +58,21 @@ export const NoteView = () => {
         </Typography>
       </Grid>
       <Grid item>
+        <input 
+          type="file"
+          multiple
+          onChange={ onFileInputChange }
+          style={{ display: 'none' }}
+          ref={ fileInputRef }
+        />
+        <IconButton
+          color="primary"
+          disabled={ isSaving }
+          onClick={ () => fileInputRef.current.click() }
+        >
+          <UploadOutlined />
+        </IconButton>
+
         <Button 
           disabled={isSaving}
           color="primary" 
@@ -84,6 +107,7 @@ export const NoteView = () => {
           onChange={onInputChange}
         />
       </Grid>
+      <ImageGallery images={ note.imageUrls }/>
     </Grid>
   );
 };
