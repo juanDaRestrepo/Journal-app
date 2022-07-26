@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux/es/exports";
 
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import { DeleteOutline, SaveOutlined, UploadOutlined } from "@mui/icons-material";
 import { useForm } from "../../hooks/useForm";
 import { useEffect, useMemo, useRef } from "react";
-import { saveNote, setActiveNote, startUploadingFiles } from "../../store/journal";
+import { saveNote, setActiveNote, startDeletingNote, startUploadingFiles } from "../../store/journal";
 import Swal from "sweetalert2";
 import 'sweetalert2/dist/sweetalert2.css'
 import { ImageGallery } from "../components";
@@ -44,6 +44,10 @@ export const NoteView = () => {
     dispatch( startUploadingFiles( target.files ));
   }
 
+  const onDelete = () => {
+    dispatch( startDeletingNote());
+  }
+
   return (
     <Grid
       container
@@ -57,7 +61,7 @@ export const NoteView = () => {
           {dateString}
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item justify="space-between"  container >
         <input 
           type="file"
           multiple
@@ -82,7 +86,18 @@ export const NoteView = () => {
           <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
           Guardar
         </Button>
+        <Button
+          onClick={ onDelete }
+          sx={{ padding: 2 , ml: 0 }}
+          color="error"
+        >
+          <DeleteOutline />
+          Delete
+        </Button>
       </Grid>
+      {/* <Grid container justifyContent='end'>
+        
+      </Grid> */}
       <Grid container>
         <TextField
           type="text"
@@ -107,6 +122,7 @@ export const NoteView = () => {
           onChange={onInputChange}
         />
       </Grid>
+      
       <ImageGallery images={ note.imageUrls }/>
     </Grid>
   );
